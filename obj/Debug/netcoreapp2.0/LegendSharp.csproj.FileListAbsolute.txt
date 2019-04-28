@@ -1,0 +1,14 @@
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.csprojAssemblyReference.cache
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.csproj.CoreCompileInputs.cache
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.AssemblyInfoInputs.cache
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.AssemblyInfo.cs
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\LegendSharp.deps.json
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\LegendSharp.runtimeconfig.json
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\LegendSharp.runtimeconfig.dev.json
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\LegendSharp.dll
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\LegendSharp.pdb
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\MiscUtil.dll
+C:\Users\lukem\Documents\GitHub\LegendSharp\bin\Debug\netcoreapp2.0\MiscUtil.xml
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.csproj.CopyComplete
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.dll
+C:\Users\lukem\Documents\GitHub\LegendSharp\obj\Debug\netcoreapp2.0\LegendSharp.pdb

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="MiscUtil">
+      <HintPath>miscutil\MiscUtil.dll</HintPath>
+	</Reference>
+    <CodeFiles Include="packets\*.cs" />
+    <CodeFiles Include="packets\types\*.cs" />
+    <CodeFiles Include="packets\client\*.cs" />
+    <CodeFiles Include="packets\server\*.cs" />
+  </ItemGroup>
+
+</Project>
