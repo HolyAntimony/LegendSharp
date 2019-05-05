@@ -5,13 +5,17 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="MiscUtil">
+	  <Reference Include="MiscUtil">
       <HintPath>miscutil\MiscUtil.dll</HintPath>
-	</Reference>
+	  </Reference>
     <CodeFiles Include="packets\*.cs" />
     <CodeFiles Include="packets\types\*.cs" />
     <CodeFiles Include="packets\client\*.cs" />
     <CodeFiles Include="packets\server\*.cs" />
+	  <CodeFiles Include="Server.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
 </Project>

@@ -7,8 +7,8 @@ namespace LegendSharp
     {
         static void Main(string[] args)
         {
+            AsynchronousSocketListener.StartListening();
             Console.WriteLine("Hello World!");
-            
         }
     }
 }
