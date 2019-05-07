@@ -13,53 +13,95 @@ namespace LegendSharp
     public class ClientHandler
     {
         Socket handler;
-        public ClientHandler(Socket handler)
+        ClientGame game;
+        bool loggedIn = false;
+        String loggedInUser;
+        String loggedInUsername;
+
+        Legend legend;
+
+        public ClientHandler(Socket handler, Legend legend)
         {
             this.handler = handler;
+            this.game = null;
+            this.legend = legend;
         }
 
-        public void sendPacket(Packet packet)
+        public void SendPacket(Packet packet)
         {
             AsynchronousSocketListener.Send(handler, packet);
         }
 
-        public void onPacket(Packet packet)
+        public void OnPacket(Packet packet)
         {
             System.Console.WriteLine("Received packet {0}, ID: {1}", packet.name, packet.id);
             if (packet is PingPacket)
             {
-                var parsed = (PingPacket) packet;
-                var response = new PongPacket(parsed.message);
-                sendPacket(response);
+                OnPing((PingPacket) packet);
             }
             else if (packet is LoginPacket)
             {
-                var parsed = (LoginPacket) packet;
-                AsynchronousSocketListener.httpClient.BaseAddress = new Uri("https://discordapp.com/api/");
-                var request = new HttpRequestMessage() {
-                    RequestUri = new Uri("https://discordapp.com/api/users/@me"),
-                    Method = HttpMethod.Get,
-                };
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", parsed.accessToken);
-                HttpResponseMessage requestRespose = AsynchronousSocketListener.httpClient.SendAsync(request).Result;;
-                requestRespose.EnsureSuccessStatusCode();
-                string result = requestRespose.Content.ReadAsStringAsync().Result;
-                JObject parsedResult = JObject.Parse(result);
-                if (parsedResult["id"] != null)
-                {
-                    String id = parsedResult["id"].ToString();
-                    String username = parsedResult["username"].ToString() + "#" + parsedResult["discriminator"].ToString();
-                    Console.WriteLine("Successful login from {0} ({1})", id, username);
-                    var response = new LoginResultPacket(1, id);
-                    sendPacket(response);
-                }
-                else
-                {
-                    Console.WriteLine("Login Failed.");
-                    var response = new LoginResultPacket(0);
-                    sendPacket(response);
-                }
+                OnLogin((LoginPacket) packet);
+            }
+            else if (packet is JoinGamePacket)
+            {
+                OnJoinGame((JoinGamePacket)packet);
             }
         }
+
+
+        public void OnPing(PingPacket packet)
+        {
+            var response = new PongPacket(packet.message);
+            SendPacket(response);
+        }
+
+        public void OnLogin(LoginPacket packet)
+        {
+            AsynchronousSocketListener.httpClient.BaseAddress = new Uri("https://discordapp.com/api/");
+            var request = new HttpRequestMessage() {
+                RequestUri = new Uri("https://discordapp.com/api/users/@me"),
+                Method = HttpMethod.Get,
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packet.accessToken);
+            HttpResponseMessage requestRespose = AsynchronousSocketListener.httpClient.SendAsync(request).Result;;
+            requestRespose.EnsureSuccessStatusCode();
+            string result = requestRespose.Content.ReadAsStringAsync().Result;
+            JObject parsedResult = JObject.Parse(result);
+            if (parsedResult["id"] != null)
+            {
+                String id = parsedResult["id"].ToString();
+                String username = parsedResult["username"].ToString() + "#" + parsedResult["discriminator"].ToString();
+                Console.WriteLine("Successful login from {0} ({1})", id, username);
+
+                loggedIn = true;
+                loggedInUser = id;
+                loggedInUsername = username;
+
+                var response = new LoginResultPacket(1, id);
+                SendPacket(response);
+            }
+            else
+            {
+                Console.WriteLine("Login Failed.");
+                var response = new LoginResultPacket(0);
+                SendPacket(response);
+            }
+        }
+
+        public void OnJoinGame(JoinGamePacket packet)
+        {
+            if (loggedIn && ( game == null || !game.active ) )
+            {
+                if (legend.HasGame(loggedInUser))
+                {
+                    legend.StopGame(loggedInUser);
+                }
+
+                game = new ClientGame(this, loggedInUser, loggedInUsername, legend.config, legend);
+                legend.AddGame(loggedInUser, game);
+            }
+        }
+
     }
 }

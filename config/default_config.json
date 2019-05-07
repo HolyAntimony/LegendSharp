@@ -1,0 +1,28 @@
+{
+    "ip": "<YOUR IP HERE>",
+    "port": 21321,
+    "db_server": "<YOUR DATABASE IP HERE>",
+    "db_port": 27017,
+    "db_user": "<YOUR DATABASE USER HERE>",
+    "db_password": "<YOUR DATABASE USER PASSWORD HERE>",
+    "db_database": "legend",
+    "world_map": "default_aworld.bmp",
+    "bump_map": "default_bworld.bmp",
+    "portals": "default_portals.json",
+    "entities": "default_entities.json",
+    "dialogue": "default_dialogue.json",
+    "items": "default_items.json",
+    "encounters": "default_encounters.json",
+    "enemies": "default_enemies.json",
+    "chat_radius": 12,
+    "entity_radius": 12,
+    "tick_rate": 10,
+    "default_user": {
+        "pos_x": 8,
+        "pos_y": 6,
+        "inventory": [],
+        "flags": {},
+        "inventory_size": 99,
+        "sprite": "rowan"
+    }
+}

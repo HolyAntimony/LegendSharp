@@ -27,6 +27,7 @@ namespace LegendSharp
 
         public ClientHandler clientHandler;
     }  
+
     public class AsynchronousSocketListener {  
         // Thread signal.  
         public static ManualResetEvent allDone = new ManualResetEvent(false);  
@@ -34,6 +35,8 @@ namespace LegendSharp
         public static BigEndianBitConverter converter = new BigEndianBitConverter();
 
         public static HttpClient httpClient = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
+
+        public static Legend legend = new Legend();
     
         public AsynchronousSocketListener() {  
         }  
@@ -91,7 +94,7 @@ namespace LegendSharp
             // Create the state object.  
             StateObject state = new StateObject();  
             state.workSocket = handler;  
-            state.clientHandler = new ClientHandler(handler);
+            state.clientHandler = new ClientHandler(handler, legend);
 
             var readyPacket = new Packets.ReadyPacket(0);
             AsynchronousSocketListener.Send(state.workSocket, readyPacket);
@@ -134,7 +137,7 @@ namespace LegendSharp
                     Buffer.BlockCopy(state.packetBuffer, 2, packetData, 0, (int)state.packetLength-2);
                     //System.Console.WriteLine(BitConverter.ToString( packetData ));
                     var packet = Packets.Packets.decode(packetId, packetData);
-                    state.clientHandler.onPacket(packet);
+                    state.clientHandler.OnPacket(packet);
                 }
                 state.buffer = new byte[StateObject.BufferSize];
                 handler.BeginReceive( state.buffer, 0, StateObject.BufferSize, 0,  

@@ -259,3 +259,14 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+#Secret Config Files
+sprites/
+config.json
+portals.json
+entities.json
+dialogue.json
+items.json
+sprites.json
+aworld.bmp
+bworld.bmp

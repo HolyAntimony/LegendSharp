@@ -1,9 +1,10 @@
 ﻿using Packets;
 using System;
+using System.Collections.Generic;
 
 namespace LegendSharp
 {
-    class Program
+    public class LegendSharp
     {
         static void Main(string[] args)
         {
