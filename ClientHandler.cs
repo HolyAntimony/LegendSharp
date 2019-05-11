@@ -20,6 +20,11 @@ namespace LegendSharp
 
         Legend legend;
 
+        readonly Type[] GAME_PACKETS = new Type[] {
+            typeof(RequestWorldPacket),
+            typeof(MoveAndFacePacket)
+        };
+
         public ClientHandler(Socket handler, Legend legend)
         {
             this.handler = handler;
@@ -37,15 +42,19 @@ namespace LegendSharp
             System.Console.WriteLine("Received packet {0}, ID: {1}", packet.name, packet.id);
             if (packet is PingPacket)
             {
-                OnPing((PingPacket) packet);
+                OnPing((PingPacket)packet);
             }
             else if (packet is LoginPacket)
             {
-                OnLogin((LoginPacket) packet);
+                OnLogin((LoginPacket)packet);
             }
             else if (packet is JoinGamePacket)
             {
                 OnJoinGame((JoinGamePacket)packet);
+            }
+            else if (this.game != null && this.game.active && Array.IndexOf(GAME_PACKETS, packet.GetType()) > -1 )
+            {
+                this.game.HandlePacket(packet);
             }
         }
 
@@ -58,7 +67,6 @@ namespace LegendSharp
 
         public void OnLogin(LoginPacket packet)
         {
-            AsynchronousSocketListener.httpClient.BaseAddress = new Uri("https://discordapp.com/api/");
             var request = new HttpRequestMessage() {
                 RequestUri = new Uri("https://discordapp.com/api/users/@me"),
                 Method = HttpMethod.Get,

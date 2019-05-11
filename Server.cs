@@ -143,7 +143,7 @@ namespace LegendSharp
                 handler.BeginReceive( state.buffer, 0, StateObject.BufferSize, 0,  
                     new AsyncCallback(ReadCallback), state); 
             }
-            catch (SocketException e)
+            catch (SocketException)
             {
                 Console.WriteLine("Client disconnected.");
                 handler.Shutdown(SocketShutdown.Both);  

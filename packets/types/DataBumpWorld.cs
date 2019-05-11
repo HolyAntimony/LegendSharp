@@ -1,9 +1,8 @@
 using MiscUtil.Conversion;
-using System;
 
 namespace Packets
 {
-    class DataWorld : DataVarying
+    class DataBumpWorld : DataVarying
     {
         public override int getLength(byte[] data, MiscUtil.Conversion.BigEndianBitConverter converter, int offset = 0)
         {
@@ -16,9 +15,9 @@ namespace Packets
             LegendSharp.World world =(LegendSharp.World) data;
             var heightData = converter.GetBytes(world.height);
             var widthData = converter.GetBytes(world.width);
-            var worldData = world.GetWorldBytes();
+            var worldData = world.GetBumpBytes();
             var worldLength = converter.GetBytes(worldData.Length);
-            var worldWordSize = converter.GetBytes(world.GetWorldWordSize());
+            var worldWordSize = converter.GetBytes(world.GetBumpWordSize());
             //TODO: World encoding
             var output = new byte[heightData.Length + widthData.Length + worldLength.Length + worldData.Length + worldWordSize.Length];
             System.Buffer.BlockCopy(heightData, 0, output, 0, 4);

@@ -46,7 +46,8 @@ namespace LegendSharp
                 userData.GetValue("pos_x").ToInt32(),
                 userData.GetValue("pos_y").ToInt32(),
                 userData.GetValue("inventory_size").ToInt32(),
-                inventory
+                inventory,
+                legend
             );
 
             foreach (var item in player.inventory.items)

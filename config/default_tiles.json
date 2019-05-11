@@ -1,0 +1,100 @@
+﻿{
+    "tiles": [
+        {
+            "color": "#000000",
+            "name": "void"
+        },
+        {
+            "color": "#b87e50",
+            "name": "straw_floor"
+        },
+        {
+            "color": "#003cb4",
+            "name": "water"
+        },
+        {
+            "color": "#b52001",
+            "name": "magma"
+        },
+        {
+            "color": "#a6693e",
+            "name": "wood_floor"
+        },
+        {
+            "color": "#64747a",
+            "name": "cobble"
+        },
+        {
+            "color": "#e0bb6c",
+            "name": "grass_path"
+        },
+        {
+            "color": "#d8a753",
+            "name": "grass_path_topleft"
+        },
+        {
+            "color": "#d4ab53",
+            "name": "grass_path_top"
+        },
+        {
+            "color": "#d4a753",
+            "name": "grass_path_topright"
+        },
+        {
+            "color": "#d4a757",
+            "name": "grass_path_right"
+        },
+        {
+            "color": "#d4a353",
+            "name": "grass_path_bottomright"
+        },
+        {
+            "color": "#d0a34f",
+            "name": "grass_path_bottom"
+        },
+        {
+            "color": "#d4a74f",
+            "name": "grass_path_bottomleft"
+        },
+        {
+            "color": "#d0a753",
+            "name": "grass_path_left"
+        },
+        {
+            "color": "#4f5356",
+            "name": "stone"
+        },
+        {
+            "color": "#7ca743",
+            "name": "grass"
+        },
+        {
+            "color": "#e6fdfb",
+            "name": "snow"
+        },
+        {
+            "color": "#794231",
+            "name": "wood_wall"
+        },
+        {
+            "color": "#ffffff",
+            "name": "white"
+        },
+        {
+            "color": "#b3754b",
+            "name": "wood_exterior"
+        },
+        {
+            "color": "#4776bb",
+            "name": "wood_window"
+        },
+        {
+            "color": "#cbb5a6",
+            "name": "wood_door_bottom"
+        },
+        {
+            "color": "#493a35",
+            "name": "wood_door_top"
+        }
+    ]
+}

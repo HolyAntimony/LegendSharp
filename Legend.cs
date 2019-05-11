@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -16,6 +17,7 @@ namespace LegendSharp
         DOWN = 2,
         RIGHT = 3,
     }
+
     public class Legend
     {
         Dictionary<String, Game> games = new Dictionary<String, Game>();
@@ -24,6 +26,8 @@ namespace LegendSharp
         public IMongoCollection<BsonDocument> userCollection;
 
         public Config config;
+        public World world;
+        public Dictionary<Position, Position> portals;
 
         public Legend()
         {
@@ -32,15 +36,23 @@ namespace LegendSharp
 
         public void LoadConfig()
         {
-            JObject configJSON = JObject.Parse(File.ReadAllText(@"config/config.json"));
-            String worldLocation = "config/" + configJSON.GetValue("world_map").ToString();
+            /*
+             * GET Config & locations of other files
+             * */
+            JObject configJSON = JObject.Parse(File.ReadAllText(@"config/config.json")); //----
+            String worldLocation = "config/" + configJSON.GetValue("world_map").ToString(); //----
             String bumpLocation = "config/" + configJSON.GetValue("bump_map").ToString();
-            String portalsLocation = "config/" + configJSON.GetValue("portals").ToString();
+            String portalsLocation = "config/" + configJSON.GetValue("portals").ToString(); //----
             String entitiesLocation = "config/" + configJSON.GetValue("entities").ToString();
             String dialogueLocation = "config/" + configJSON.GetValue("dialogue").ToString();
-            String itemsLocation = "config/" + configJSON.GetValue("items").ToString();
+            String itemsLocation = "config/" + configJSON.GetValue("items").ToString(); //----
             String encountersLocation = "config/" + configJSON.GetValue("encounters").ToString();
             String enemiesLocation = "config/" + configJSON.GetValue("enemies").ToString();
+            String tilesLocation = "config/" + configJSON.GetValue("tiles").ToString(); //----
+
+            /*
+             * Build config values into a config object
+             * */
 
             BsonDocument defaultUser = BsonDocument.Parse(configJSON.GetValue("default_user").ToString());
             IPAddress ip = IPAddress.Parse(configJSON.GetValue("ip").ToString());
@@ -48,6 +60,10 @@ namespace LegendSharp
             int chatRadius = configJSON.GetValue("chat_radius").ToObject<int>();
             int entityRadius = configJSON.GetValue("entity_radius").ToObject<int>();
             int tickRate = configJSON.GetValue("tick_rate").ToObject<int>();
+
+            /*
+             * Load base items
+             * */
 
             JObject itemsJSON = JObject.Parse(File.ReadAllText(itemsLocation));
 
@@ -73,6 +89,9 @@ namespace LegendSharp
                 baseItems = baseItems,
             };
 
+            /*
+             * Connect to database
+             */
             String mongoServer = configJSON.GetValue("db_server").ToString();
             int mongoPort = configJSON.GetValue("db_port").ToObject<int>();
             String mongoUser = configJSON.GetValue("db_user").ToString();
@@ -89,7 +108,89 @@ namespace LegendSharp
             db = mongoClient.GetDatabase(mongoDatabase);
             userCollection = db.GetCollection<BsonDocument>("users");
 
+            /*
+             * Get Tiles
+             * */
+            JObject tilesJSON = JObject.Parse(File.ReadAllText(tilesLocation));
+
+            List<JToken> tilesList = tilesJSON.GetValue("tiles").ToObject<List<JToken>>();
+            Dictionary<Color, int> colorMap = new Dictionary<Color, int>();
+            Dictionary<Color, int> bumpColorMap = new Dictionary<Color, int>
+            {
+                [Color.FromArgb(0, 0, 0)] = 0,
+                [Color.FromArgb(255, 255, 255)] = 1,
+                [Color.FromArgb(255, 0, 0)] = 2
+            };
+
+            for (var i = 0; i < tilesList.Count; i++)
+            {
+                var tileDocument = tilesList[i];
+                Color color = System.Drawing.ColorTranslator.FromHtml(tileDocument.ToObject<JObject>().GetValue("color").ToString());
+                colorMap[color] = i;
+            }
+
+
+            /*
+             * Get world
+             * */
+
+            Bitmap worldImage = new Bitmap(worldLocation);
+            Bitmap bumpImage = new Bitmap(bumpLocation);
+            int worldHeight = worldImage.Height;
+            int worldWidth = worldImage.Width;
+            int[,] worldData = new int[worldHeight, worldWidth];
+            int[,] bumpData = new int[worldHeight, worldWidth];
+
+            for (int y = 0; y < worldHeight; y++)
+            {
+                for (int x = 0; x < worldWidth; x++)
+                {
+                    Color cell = worldImage.GetPixel(x, y);
+                    int colIndex = 0;
+                    if (colorMap.ContainsKey(cell))
+                    {
+                        colIndex = colorMap[cell];
+                    }
+                    worldData[y, x] = colIndex;
+
+                    Color bumpCell = bumpImage.GetPixel(x, y);
+                    int bumpColIndex = 0;
+                    if (bumpColorMap.ContainsKey(bumpCell))
+                    {
+                        bumpColIndex = bumpColorMap[bumpCell];
+                    }
+                    bumpData[y, x] = bumpColIndex;
+                }
+            }
+            world = new World(worldData, bumpData, worldHeight, worldWidth);
+
+            /*
+             * Get Portals
+             * */
+            portals = new Dictionary<Position, Position>();
+
+            JArray portalsJArray = JArray.Parse(File.ReadAllText(portalsLocation));
+            foreach (var portalToken in portalsJArray)
+            {
+                JObject portal = portalToken.ToObject<JObject>();
+                var fromX = portal.GetValue("pos_x").ToObject<int>();
+                var fromY = portal.GetValue("pos_y").ToObject<int>();
+                var toX = portal.GetValue("to_x").ToObject<int>();
+                var toY = portal.GetValue("to_y").ToObject<int>();
+                Position from = new Position
+                {
+                    x = fromX,
+                    y = fromY
+                };
+                Position to = new Position
+                {
+                    x = toX,
+                    y = toY
+                };
+                portals[from] = to;
+            }
         }
+
 
         public BsonDocument GetUserData(String id)
         {
