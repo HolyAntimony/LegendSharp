@@ -40,6 +40,20 @@ namespace LegendSharp
                     handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));
                 }
             }
+            else if (packet is MovePacket)
+            {
+                MovePacket movePacket = (MovePacket)packet;
+                Position newPos = new Position()
+                {
+                    x = movePacket.x,
+                    y = movePacket.y
+                };
+                player.Move(newPos);
+                if (player.pos != newPos)
+                {
+                    handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));
+                }
+            }
         }
     }
 }
