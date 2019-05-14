@@ -270,3 +270,11 @@ items.json
 sprites.json
 aworld.bmp
 bworld.bmp
+
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+packages
+launchSettings.json
