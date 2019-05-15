@@ -15,13 +15,29 @@ namespace LegendSharp
         int bumpWordSize;
         byte[] worldData;
         byte[] bumpData;
+        Dictionary<Position, Chunk> chunks;
+        public Dictionary<Position, Position> portals;
 
-        public World(int[,] worldMap, int[,] bumpMap, int height, int width)
+        public World(int[,] worldMap, int[,] bumpMap, int height, int width, Dictionary<Position, Position> portals)
         {
             this.worldMap = worldMap;
             this.bumpMap = bumpMap;
             this.height = height;
             this.width = width;
+            this.portals = portals;
+            chunks = new Dictionary<Position, Chunk>();
+            for (var x = 0; x < width >> 3; x++)
+            {
+                for (var y = 0; y < height >> 3; y++)
+                {
+                    Position chunkPos = new Position(x, y);
+                    chunks[chunkPos] = new Chunk()
+                    {
+                        pos = chunkPos,
+                        entities = new List<Entity>()
+                    };
+                }
+            }
             CalculateWordSizes();
             CalculateData();
         }
@@ -124,6 +140,62 @@ namespace LegendSharp
             if (bumpMap[pos.y, pos.x] == 0)
             {
                 return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public Chunk GetChunk(Position pos)
+        {
+            Position chunkPos = new Position(pos.x >> 3, pos.y >> 3);
+            if (chunks.ContainsKey(chunkPos))
+            {
+                return chunks[chunkPos];
+            }
+            else
+            {
+                return chunks[new Position(0, 0)];
+            }
+        }
+
+        public void MoveEntityChunk(Entity entity, Position prevPos, Position newPos)
+        {
+            if ( prevPos.x >> 3 != newPos.x >> 3 || prevPos.y >> 3 != newPos.y >> 3)
+            {
+                Chunk prevChunk = GetChunk(prevPos);
+                Chunk newChunk = GetChunk(newPos);
+                prevChunk.entities.Remove(entity);
+                newChunk.entities.Add(entity);
+                Console.WriteLine("Entity moved to chunk {0}, {1}", newChunk.pos.x, newChunk.pos.y);
+            }
+        }
+
+        public bool MoveEntity(Entity entity, Position newPos, bool force = false)
+        {
+            Position prevPos = entity.pos;
+            if (newPos.x < width && newPos.x >= 0 && newPos.y < height && newPos.y >= 0)
+            {
+                if (force || !Collides(newPos))
+                {
+                    if (portals.ContainsKey(newPos))
+                    {
+                        entity.pos = portals[newPos];
+                    }
+                    else
+                    {
+                        entity.pos = newPos;
+                    }
+                    MoveEntityChunk(entity, prevPos, entity.pos);
+                    return true;
+                }
+                else
+                {
+                    //Detect for interacts
+
+                    return false;
+                }
             }
             else
             {

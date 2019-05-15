@@ -28,13 +28,9 @@ namespace LegendSharp
             else if (packet is MoveAndFacePacket)
             {
                 MoveAndFacePacket movePacket = (MoveAndFacePacket)packet;
-                Position newPos = new Position()
-                {
-                    x = movePacket.x,
-                    y = movePacket.y
-                };
+                Position newPos = new Position(movePacket.x, movePacket.y);
                 player.facing = (FACING) movePacket.facing;
-                player.Move(newPos);
+                legend.world.MoveEntity(player, newPos);
                 if (player.pos != newPos)
                 {
                     handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));
@@ -43,12 +39,8 @@ namespace LegendSharp
             else if (packet is MovePacket)
             {
                 MovePacket movePacket = (MovePacket)packet;
-                Position newPos = new Position()
-                {
-                    x = movePacket.x,
-                    y = movePacket.y
-                };
-                player.Move(newPos);
+                Position newPos = new Position(movePacket.x, movePacket.y);
+                legend.world.MoveEntity(player, newPos);
                 if (player.pos != newPos)
                 {
                     handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));

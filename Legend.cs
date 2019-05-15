@@ -27,7 +27,7 @@ namespace LegendSharp
 
         public Config config;
         public World world;
-        public Dictionary<Position, Position> portals;
+        
 
         public Legend()
         {
@@ -109,8 +109,26 @@ namespace LegendSharp
             userCollection = db.GetCollection<BsonDocument>("users");
 
             /*
-             * Get Tiles
+             * Get Portals
              * */
+            Dictionary<Position, Position> portals = new Dictionary<Position, Position>();
+
+            JArray portalsJArray = JArray.Parse(File.ReadAllText(portalsLocation));
+            foreach (var portalToken in portalsJArray)
+            {
+                JObject portal = portalToken.ToObject<JObject>();
+                var fromX = portal.GetValue("pos_x").ToObject<int>();
+                var fromY = portal.GetValue("pos_y").ToObject<int>();
+                var toX = portal.GetValue("to_x").ToObject<int>();
+                var toY = portal.GetValue("to_y").ToObject<int>();
+                Position from = new Position(fromX, fromY);
+                Position to = new Position(toX, toY);
+                portals[from] = to;
+            }
+
+            /*
+ * Get Tiles
+ * */
             JObject tilesJSON = JObject.Parse(File.ReadAllText(tilesLocation));
 
             List<JToken> tilesList = tilesJSON.GetValue("tiles").ToObject<List<JToken>>();
@@ -162,33 +180,7 @@ namespace LegendSharp
                     bumpData[y, x] = bumpColIndex;
                 }
             }
-            world = new World(worldData, bumpData, worldHeight, worldWidth);
-
-            /*
-             * Get Portals
-             * */
-            portals = new Dictionary<Position, Position>();
-
-            JArray portalsJArray = JArray.Parse(File.ReadAllText(portalsLocation));
-            foreach (var portalToken in portalsJArray)
-            {
-                JObject portal = portalToken.ToObject<JObject>();
-                var fromX = portal.GetValue("pos_x").ToObject<int>();
-                var fromY = portal.GetValue("pos_y").ToObject<int>();
-                var toX = portal.GetValue("to_x").ToObject<int>();
-                var toY = portal.GetValue("to_y").ToObject<int>();
-                Position from = new Position
-                {
-                    x = fromX,
-                    y = fromY
-                };
-                Position to = new Position
-                {
-                    x = toX,
-                    y = toY
-                };
-                portals[from] = to;
-            }
+            world = new World(worldData, bumpData, worldHeight, worldWidth, portals);
         }
 
 

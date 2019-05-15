@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections.Generic;
 
 namespace Packets
 {
@@ -27,7 +27,7 @@ namespace Packets
             uint width = (uint) decoded[1];
             int[,] worldData = (int [,]) decoded[2];
             int[,] bumpData = (int [,]) decoded[3];
-            world = new LegendSharp.World(worldData, bumpData, (int) height, (int) width);
+            world = new LegendSharp.World(worldData, bumpData, (int)height, (int)width, new Dictionary<LegendSharp.Position, LegendSharp.Position>());
         }
 
         public override byte[] encode()
