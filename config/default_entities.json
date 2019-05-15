@@ -2,9 +2,9 @@
     {
         "pos_x": 6,
         "pos_y": 6,
+        "facing": 2,
         "sprite": "antonio",
         "type": "npc",
-        "dialogue": "jim_1",
-        "facing": 2
+        "dialogue": "jim_1"
     }
 ]

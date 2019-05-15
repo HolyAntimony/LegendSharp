@@ -12,17 +12,14 @@ namespace LegendSharp
         public Chunk chunk;
         Legend legend;
 
-        public Entity(String sprite, Legend legend)
+        public Entity(String sprite, int posX, int posY, Legend legend)
         {
             this.sprite = sprite;
             this.legend = legend;
             chunk = legend.world.GetChunk(pos);
-        }
-
-        public Entity(String sprite, int posX, int posY, Legend legend) : this(sprite, legend)
-        {
             this.pos = new Position(posX, posY);
             chunk = legend.world.GetChunk(pos);
+            legend.world.AddEntity(this);
         }
 
         public Entity(String sprite, int posX, int posY, FACING facing, Legend legend) : this(sprite, posX, posY, legend)

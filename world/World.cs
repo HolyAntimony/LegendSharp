@@ -203,6 +203,12 @@ namespace LegendSharp
             }
         }
 
+        public void AddEntity(Entity entity)
+        {
+            Chunk targetChunk = GetChunk(entity.pos);
+            targetChunk.entities.Add(entity);
+        }
+
         public void SetWorldMap(int[,] worldMap)
         {
             this.worldMap = worldMap;

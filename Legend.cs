@@ -181,6 +181,26 @@ namespace LegendSharp
                 }
             }
             world = new World(worldData, bumpData, worldHeight, worldWidth, portals);
+
+            /*
+             * Load Entities
+             * */
+
+            JArray entitiesJArray = JArray.Parse(File.ReadAllText(entitiesLocation));
+            foreach (var entityToken in entitiesJArray)
+            {
+                JObject entityObject = entityToken.ToObject<JObject>();
+                int posX = entityObject.GetValue("pos_x").ToObject<int>();
+                int posY = entityObject.GetValue("pos_y").ToObject<int>();
+                int facing = entityObject.GetValue("facing").ToObject<int>();
+                string sprite = entityObject.GetValue("sprite").ToString();
+                string entityType = entityObject.GetValue("type").ToString();
+                if (entityType == "npc")
+                {
+                    string dialogueKey = entityObject.GetValue("dialogue").ToString();
+                    NPC npc = new NPC(sprite, posX, posY, (FACING)facing, dialogueKey, this);
+                }
+            }
         }
 
 
