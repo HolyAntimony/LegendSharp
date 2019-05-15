@@ -168,7 +168,7 @@ namespace LegendSharp
                 Chunk newChunk = GetChunk(newPos);
                 prevChunk.entities.Remove(entity);
                 newChunk.entities.Add(entity);
-                Console.WriteLine("Entity moved to chunk {0}, {1}", newChunk.pos.x, newChunk.pos.y);
+                entity.chunk = newChunk;
             }
         }
 
