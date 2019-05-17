@@ -10,7 +10,9 @@ namespace LegendSharp
         public FACING facing = FACING.DOWN;
         public String sprite;
         public Chunk chunk;
+        public Guid uuid;
         Legend legend;
+
 
         public Entity(String sprite, int posX, int posY, Legend legend)
         {
@@ -20,6 +22,7 @@ namespace LegendSharp
             this.pos = new Position(posX, posY);
             chunk = legend.world.GetChunk(pos);
             legend.world.AddEntity(this);
+            uuid = System.Guid.NewGuid();
         }
 
         public Entity(String sprite, int posX, int posY, FACING facing, Legend legend) : this(sprite, posX, posY, legend)

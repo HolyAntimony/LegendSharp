@@ -17,6 +17,7 @@ namespace LegendSharp
         byte[] bumpData;
         Dictionary<Position, Chunk> chunks;
         public Dictionary<Position, Position> portals;
+        List<Entity> entities;
 
         public World(int[,] worldMap, int[,] bumpMap, int height, int width, Dictionary<Position, Position> portals)
         {
@@ -207,6 +208,14 @@ namespace LegendSharp
         {
             Chunk targetChunk = GetChunk(entity.pos);
             targetChunk.entities.Add(entity);
+            entities.Add(entity);
+        }
+        
+        public void RemoveEntity(Entity entity)
+        {
+            Chunk entityChunk = entity.chunk;
+            entityChunk.entities.Remove(entity);
+            entities.Remove(entity);
         }
 
         public void SetWorldMap(int[,] worldMap)

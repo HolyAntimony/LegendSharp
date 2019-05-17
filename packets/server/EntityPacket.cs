@@ -1,3 +1,5 @@
+using System;
+
 namespace Packets
 {
     public class EntityPacket : Packet {
@@ -22,7 +24,7 @@ namespace Packets
         public string sprite;
         public string uuid;
 
-        public EntityPacket(int pos_x, int pos_y, int entity_type, int entity_facing, bool entity_interactable, string entity_sprite, string entity_uuid )
+        public EntityPacket(int pos_x, int pos_y, int entity_type, int entity_facing, bool entity_interactable, string entity_sprite, Guid entity_uuid )
         {
             x = pos_y;
             y = pos_y;
@@ -30,7 +32,7 @@ namespace Packets
             type = entity_type;
             interactable = entity_interactable;
             sprite = entity_sprite;
-            uuid = entity_uuid;
+            uuid = entity_uuid.ToString("N");
         }
         public EntityPacket(byte[] received_data)
         {
