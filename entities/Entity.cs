@@ -18,13 +18,13 @@ namespace LegendSharp
 
         public Entity(String sprite, int posX, int posY, Legend legend)
         {
+            uuid = System.Guid.NewGuid();
             this.sprite = sprite;
             this.legend = legend;
             chunk = legend.world.GetChunk(pos);
             this.pos = new Position(posX, posY);
             chunk = legend.world.GetChunk(pos);
             legend.world.AddEntity(this, legend.config);
-            uuid = System.Guid.NewGuid();
         }
 
         public Entity(String sprite, int posX, int posY, FACING facing, Legend legend) : this(sprite, posX, posY, legend)

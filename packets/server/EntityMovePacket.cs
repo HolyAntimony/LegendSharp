@@ -21,7 +21,7 @@ namespace Packets
 
         public EntityMovePacket(int pos_x, int pos_y, int entity_facing, Guid entity_uuid )
         {
-            x = pos_y;
+            x = pos_x;
             y = pos_y;
             uuid = entity_uuid.ToString("N");
             facing = entity_facing;

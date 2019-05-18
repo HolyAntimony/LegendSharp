@@ -48,7 +48,7 @@ namespace LegendSharp
             // running the listener is "host.contoso.com".  
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());  
             IPAddress ipAddress = ipHostInfo.AddressList[0]; 
-            ipAddress = IPAddress.Parse("127.0.0.1");
+            ipAddress = IPAddress.Parse("10.1.0.152");
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 21321);  
     
             // Create a TCP/IP socket.  
@@ -170,6 +170,7 @@ namespace LegendSharp
 
         public static void Send(Socket handler, Packet packet) {
             byte[] byteData = Packets.Packets.encode(packet);
+            Console.WriteLine("Sending packet #{0} {1}", packet.id, packet.name);
             handler.BeginSend(byteData, 0, byteData.Length, 0,  
                 new AsyncCallback(SendCallback), handler);  
         }
