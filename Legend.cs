@@ -7,6 +7,7 @@ using System.Text;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
+using HighResolutionTimer;
 
 namespace LegendSharp
 {
@@ -27,11 +28,21 @@ namespace LegendSharp
 
         public Config config;
         public World world;
+        HighResolutionTimer.HighResolutionTimer timer;
         
 
         public Legend()
         {
+            timer = new HighResolutionTimer.HighResolutionTimer(1000.0f);
+            timer.UseHighPriorityThread = false;
+            timer.Elapsed += DoTick;
+            timer.Start();
             LoadConfig();
+        }
+
+        public void DoTick(object s, HighResolutionTimerElapsedEventArgs e)
+        {
+            Console.WriteLine("Tick {0}", e.Delay);
         }
 
         public void LoadConfig()
@@ -60,6 +71,8 @@ namespace LegendSharp
             int chatRadius = configJSON.GetValue("chat_radius").ToObject<int>();
             int entityRadius = configJSON.GetValue("entity_radius").ToObject<int>();
             int tickRate = configJSON.GetValue("tick_rate").ToObject<int>();
+            float tickFrequency = 1000.0f / tickRate;
+            timer.Interval = tickFrequency;
 
             /*
              * Load base items

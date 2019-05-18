@@ -17,7 +17,7 @@ namespace LegendSharp
         byte[] bumpData;
         Dictionary<Position, Chunk> chunks;
         public Dictionary<Position, Position> portals;
-        List<Entity> entities;
+        List<Entity> entities = new List<Entity>();
 
         public World(int[,] worldMap, int[,] bumpMap, int height, int width, Dictionary<Position, Position> portals)
         {
