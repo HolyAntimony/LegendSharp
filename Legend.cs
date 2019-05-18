@@ -42,7 +42,7 @@ namespace LegendSharp
 
         public void DoTick(object s, HighResolutionTimerElapsedEventArgs e)
         {
-            Console.WriteLine("Tick {0}", e.Delay);
+            //Console.WriteLine("Tick {0}", e.Delay);
         }
 
         public void LoadConfig()
@@ -69,7 +69,8 @@ namespace LegendSharp
             IPAddress ip = IPAddress.Parse(configJSON.GetValue("ip").ToString());
             int port = configJSON.GetValue("port").ToObject<int>();
             int chatRadius = configJSON.GetValue("chat_radius").ToObject<int>();
-            int entityRadius = configJSON.GetValue("entity_radius").ToObject<int>();
+            int entityDistanceX = configJSON.GetValue("entity_distance_x").ToObject<int>();
+            int entityDistanceY = configJSON.GetValue("entity_distance_y").ToObject<int>();
             int tickRate = configJSON.GetValue("tick_rate").ToObject<int>();
             float tickFrequency = 1000.0f / tickRate;
             timer.Interval = tickFrequency;
@@ -97,7 +98,8 @@ namespace LegendSharp
                 ip = ip,
                 port = port,
                 chatRadius = chatRadius,
-                entityRadius = entityRadius,
+                entityDistanceX = entityDistanceX,
+                entityDistanceY = entityDistanceY,
                 tickRate = tickRate,
                 baseItems = baseItems,
             };

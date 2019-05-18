@@ -17,6 +17,7 @@ namespace LegendSharp
             this.legend = legend;
             handler.SendPacket(new ReadyPacket(1));
             handler.SendPacket(new PlayerPositionPacket(this.player.pos.x, this.player.pos.y));
+            legend.world.RenderEntities(player, legend.config);
         }
 
         public void HandlePacket(Packet packet)
@@ -30,7 +31,7 @@ namespace LegendSharp
                 MoveAndFacePacket movePacket = (MoveAndFacePacket)packet;
                 Position newPos = new Position(movePacket.x, movePacket.y);
                 player.facing = (FACING) movePacket.facing;
-                legend.world.MoveEntity(player, newPos);
+                legend.world.MoveEntity(player, newPos, legend.config);
                 if (player.pos != newPos)
                 {
                     handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));
@@ -40,12 +41,29 @@ namespace LegendSharp
             {
                 MovePacket movePacket = (MovePacket)packet;
                 Position newPos = new Position(movePacket.x, movePacket.y);
-                legend.world.MoveEntity(player, newPos);
+                legend.world.MoveEntity(player, newPos, legend.config);
                 if (player.pos != newPos)
                 {
                     handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));
                 }
             }
+        }
+
+        public override void UpdateEntityPos(Entity entity)
+        {
+            handler.SendPacket(new EntityMovePacket(entity.pos.x, entity.pos.y, (int)entity.facing, entity.uuid));
+        }
+
+        public override void AddToCache(Entity entity)
+        {
+            cachedEntities.Add(entity);
+            handler.SendPacket(new EntityPacket(entity));
+        }
+
+        public override void RemoveFromCache(Entity entity)
+        {
+            cachedEntities.Remove(entity);
+            handler.SendPacket(new InvalidateCachePacket(entity.uuid));
         }
     }
 }

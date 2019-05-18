@@ -12,7 +12,8 @@ namespace LegendSharp
         public IPAddress ip;
         public int port;
         public int chatRadius;
-        public int entityRadius;
+        public int entityDistanceX;
+        public int entityDistanceY;
         public int tickRate;
         public Dictionary<String, BaseItem> baseItems;
     }

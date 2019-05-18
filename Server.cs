@@ -145,6 +145,7 @@ namespace LegendSharp
             }
             catch (SocketException)
             {
+                state.clientHandler.OnDisconnect();
                 Console.WriteLine("Client disconnected.");
                 handler.Shutdown(SocketShutdown.Both);  
                 handler.Close();  

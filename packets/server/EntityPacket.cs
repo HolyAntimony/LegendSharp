@@ -19,14 +19,14 @@ namespace Packets
         public int x;
         public int y;
         public int facing;
-        public int type;
+        public ushort type;
         public bool interactable;
         public string sprite;
         public string uuid;
 
-        public EntityPacket(int pos_x, int pos_y, int entity_type, int entity_facing, bool entity_interactable, string entity_sprite, Guid entity_uuid )
+        public EntityPacket(int pos_x, int pos_y, ushort entity_type, int entity_facing, bool entity_interactable, string entity_sprite, Guid entity_uuid )
         {
-            x = pos_y;
+            x = pos_x;
             y = pos_y;
             facing = entity_facing;
             type = entity_type;
@@ -34,6 +34,31 @@ namespace Packets
             sprite = entity_sprite;
             uuid = entity_uuid.ToString("N");
         }
+
+        public EntityPacket(LegendSharp.Entity entity)
+        {
+            x = entity.pos.x;
+            y = entity.pos.y;
+            facing = (int)entity.facing;
+            sprite = entity.sprite;
+            uuid = entity.uuid.ToString("N");
+            if (entity is LegendSharp.Player)
+            {
+                type = 2;
+                interactable = false;
+            }
+            else if (entity is LegendSharp.NPC)
+            {
+                type = 1;
+                interactable = true;
+            }
+            else
+            {
+                type = 0;
+                interactable = false;
+            }
+        }
+
         public EntityPacket(byte[] received_data)
         {
             var decoded = Packets.decodeData(schema, received_data);
@@ -48,7 +73,7 @@ namespace Packets
 
         public override byte[] encode()
         {
-            var output = Packets.encodeData(schema, new object[] {x, y, type, interactable ? 1 : 0, sprite, uuid});
+            var output = Packets.encodeData(schema, new object[] {x, y, type, facing, interactable ? 1 : 0, sprite, uuid});
             return output;
         }
     }

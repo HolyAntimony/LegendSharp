@@ -13,6 +13,8 @@ namespace LegendSharp
         public Guid uuid;
         Legend legend;
 
+        public HashSet<Game> cachedBy = new HashSet<Game>();
+
 
         public Entity(String sprite, int posX, int posY, Legend legend)
         {
@@ -21,7 +23,7 @@ namespace LegendSharp
             chunk = legend.world.GetChunk(pos);
             this.pos = new Position(posX, posY);
             chunk = legend.world.GetChunk(pos);
-            legend.world.AddEntity(this);
+            legend.world.AddEntity(this, legend.config);
             uuid = System.Guid.NewGuid();
         }
 

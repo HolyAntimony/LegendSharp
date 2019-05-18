@@ -14,9 +14,10 @@
     "items": "default_items.json",
     "encounters": "default_encounters.json",
     "enemies": "default_enemies.json",
-    "tiles":  "default_tiles.json",
+    "tiles": "default_tiles.json",
     "chat_radius": 12,
-    "entity_radius": 12,
+    "entity_distance_x": 1,
+    "entity_distance_y": 1,
     "tick_rate": 10,
     "default_user": {
         "pos_x": 8,

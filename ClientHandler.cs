@@ -58,6 +58,14 @@ namespace LegendSharp
             }
         }
 
+        public void OnDisconnect()
+        {
+            if (this.game != null)
+            {
+                this.game.Stop();
+            }
+        }
+
 
         public void OnPing(PingPacket packet)
         {

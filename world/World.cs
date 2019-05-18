@@ -161,7 +161,91 @@ namespace LegendSharp
             }
         }
 
-        public void MoveEntityChunk(Entity entity, Position prevPos, Position newPos)
+        public bool InCacheRange(Entity entity, Position pos, Config config)
+        {
+            int xDistance = Math.Abs(entity.pos.x - pos.x);
+            int yDistance = Math.Abs(entity.pos.y - pos.y);
+            if (xDistance <= config.entityDistanceX && yDistance <= config.entityDistanceY)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void Cache(Game game, Entity entity)
+        {
+            if (entity is Player)
+            {
+                if (((Player)entity).game == game)
+                {
+                    return;
+                }
+            }
+            Console.WriteLine("Adding {0} to {1}'s cache", entity.uuid, game.player.uuid);
+            game.AddToCache(entity);
+            entity.cachedBy.Add(game);
+        }
+
+        public void Uncache(Game game, Entity entity)
+        {
+            if (entity is Player)
+            {
+                if (((Player)entity).game == game)
+                {
+                    return;
+                }
+            }
+            game.RemoveFromCache(entity);
+            entity.cachedBy.Remove(game);
+        }
+
+        public void UpdateEntityCaches(Entity entity, Config config)
+        {
+            List<Game> toUncache = new List<Game>();
+            List<Game> toCache = new List<Game>();
+            foreach (Game game in entity.cachedBy)
+            {
+                if (!InCacheRange(game.player, entity.pos, config))
+                {
+                    //That game can no longer have us in their cache, invalidate.
+                    toUncache.Add(game);
+                }
+            }
+            for (int x = entity.chunk.pos.x - config.entityDistanceX; x <= entity.chunk.pos.x + config.entityDistanceX; x++)
+            {
+                for (int y = entity.chunk.pos.y - config.entityDistanceY; y <= entity.chunk.pos.y + config.entityDistanceY; y++)
+                {
+                    foreach (Entity chunkEntity in GetChunk(new Position(x, y)).entities)
+                    {
+                        if (chunkEntity is Player && chunkEntity != entity)
+                        {
+                            Player chunkPlayer = (Player)chunkEntity;
+                            if (!chunkPlayer.game.cachedEntities.Contains(entity))
+                            {
+                                toCache.Add(chunkPlayer.game);
+                            }
+                            else
+                            {
+                                chunkPlayer.game.UpdateEntityPos(entity);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (Game game in toUncache)
+            {
+                Uncache(game, entity);
+            }
+            foreach (Game game in toCache)
+            {
+                Cache(game, entity);
+            }
+        }
+
+        public void MoveEntityChunk(Entity entity, Position prevPos, Position newPos, Config config)
         {
             if ( prevPos.x >> 3 != newPos.x >> 3 || prevPos.y >> 3 != newPos.y >> 3)
             {
@@ -170,10 +254,36 @@ namespace LegendSharp
                 prevChunk.entities.Remove(entity);
                 newChunk.entities.Add(entity);
                 entity.chunk = newChunk;
+                UpdateEntityCaches(entity, config);
             }
         }
 
-        public bool MoveEntity(Entity entity, Position newPos, bool force = false)
+        public void MoveEntityPositions(Entity entity)
+        {
+            foreach (Game game in entity.cachedBy)
+            {
+                game.UpdateEntityPos(entity);
+            }
+        }
+
+        public void RenderEntities(Player player, Config config)
+        {
+            for (int x = Math.Max(0, player.chunk.pos.x - config.entityDistanceX); x <= Math.Min( (width >> 3) - 1, player.chunk.pos.x + config.entityDistanceX); x++)
+            {
+                for (int y = Math.Max(0, player.chunk.pos.y - config.entityDistanceY); y <= Math.Min( (height >> 3) - 1, player.chunk.pos.y + config.entityDistanceY); y++)
+                {
+                    foreach (Entity chunkEntity in chunks[new Position(x, y)].entities)
+                    {
+                        if (chunkEntity != player && !player.game.cachedEntities.Contains(chunkEntity))
+                        {
+                            Cache(player.game, chunkEntity);
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool MoveEntity(Entity entity, Position newPos, Config config, bool force = false)
         {
             Position prevPos = entity.pos;
             if (newPos.x < width && newPos.x >= 0 && newPos.y < height && newPos.y >= 0)
@@ -188,7 +298,15 @@ namespace LegendSharp
                     {
                         entity.pos = newPos;
                     }
-                    MoveEntityChunk(entity, prevPos, entity.pos);
+                    if (prevPos.x != newPos.x || prevPos.y != newPos.y || force)
+                    {
+                        MoveEntityChunk(entity, prevPos, entity.pos, config);
+                        MoveEntityPositions(entity);
+                        if (entity is Player)
+                        {
+                            RenderEntities((Player)entity, config);
+                        }
+                    }
                     return true;
                 }
                 else
@@ -204,11 +322,13 @@ namespace LegendSharp
             }
         }
 
-        public void AddEntity(Entity entity)
+        public void AddEntity(Entity entity, Config config)
         {
             Chunk targetChunk = GetChunk(entity.pos);
             targetChunk.entities.Add(entity);
             entities.Add(entity);
+            UpdateEntityCaches(entity, config);
+ 
         }
         
         public void RemoveEntity(Entity entity)
@@ -216,6 +336,10 @@ namespace LegendSharp
             Chunk entityChunk = entity.chunk;
             entityChunk.entities.Remove(entity);
             entities.Remove(entity);
+            foreach (Game game in entity.cachedBy)
+            {
+                Uncache(game, entity);
+            }
         }
 
         public void SetWorldMap(int[,] worldMap)
