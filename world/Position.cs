@@ -59,6 +59,19 @@ namespace LegendSharp
             }
         }
 
+        public static bool WithinDistance(Position pos1, Position pos2, int distance)
+        {
+            int squaredDistance = ((pos1.x - pos2.x) * (pos1.x - pos2.x)) + ((pos1.y - pos2.y) * (pos1.y - pos2.y));
+            if (squaredDistance < (distance*distance))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
     }
 }

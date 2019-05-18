@@ -47,6 +47,12 @@ namespace LegendSharp
                     handler.SendPacket(new PlayerPositionPacket(player.pos.x, player.pos.y));
                 }
             }
+            else if (packet is SendMessagePacket)
+            {
+                SendMessagePacket messagePacket = (SendMessagePacket)packet;
+                var msg = new ChatMessage(this.username, messagePacket.message, this.userId);
+                legend.world.SendToNearby(msg, player.pos, legend.config);
+            }
         }
 
         public override void UpdateEntityPos(Entity entity)
@@ -64,6 +70,11 @@ namespace LegendSharp
         {
             cachedEntities.Remove(entity);
             handler.SendPacket(new InvalidateCachePacket(entity.uuid));
+        }
+
+        public override void SendMessage(ChatMessage message, Position pos)
+        {
+            handler.SendPacket(new ChatPacket(message.author, message.message, message.authorId, message.uuid, pos.x, pos.y));
         }
     }
 }

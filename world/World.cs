@@ -342,6 +342,28 @@ namespace LegendSharp
             }
         }
 
+        public void SendToNearby(ChatMessage message, Position pos, Config config)
+        {
+            Position chunkPos = GetChunk(pos).pos;
+            int chunkMinX = Math.Max(0, chunkPos.x - (config.chatRadius << 3));
+            int chunkMaxX = Math.Min((width >> 3) - 1, chunkPos.x + (config.chatRadius << 3));
+            int chunkMinY = Math.Max(0, chunkPos.y - (config.chatRadius << 3));
+            int chunkMaxY = Math.Min((height >> 3) - 1, chunkPos.y + (config.chatRadius << 3));
+            for (int x = chunkMinX; x <= chunkMaxX; x++)
+            {
+                for (int y = chunkMinY; y <= chunkMaxY; y++)
+                {
+                    foreach (Entity chunkEntity in chunks[new Position(x, y)].entities)
+                    {
+                        if (chunkEntity is Player && Position.WithinDistance(chunkEntity.pos, pos, config.chatRadius))
+                        {
+                            ((Player)chunkEntity).game.SendMessage(message, pos);
+                        }
+                    }
+                }
+            }
+        }
+
         public void SetWorldMap(int[,] worldMap)
         {
             this.worldMap = worldMap;

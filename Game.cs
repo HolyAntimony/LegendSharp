@@ -101,5 +101,10 @@ namespace LegendSharp
         {
             cachedEntities.Remove(entity);
         }
+
+        public virtual void SendMessage(ChatMessage message, Position pos)
+        {
+
+        }
     }
 }
