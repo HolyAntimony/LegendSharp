@@ -19,6 +19,8 @@ namespace LegendSharp
 
         public HashSet<Entity> cachedEntities;
 
+        public bool justCached = false;
+
         Legend legend;
 
 

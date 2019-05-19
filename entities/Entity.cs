@@ -12,6 +12,8 @@ namespace LegendSharp
         public Chunk chunk;
         public Guid uuid;
         Legend legend;
+        public bool moved = false;
+        public bool movedChunks = false;
 
         public HashSet<Game> cachedBy = new HashSet<Game>();
 
@@ -21,9 +23,9 @@ namespace LegendSharp
             uuid = System.Guid.NewGuid();
             this.sprite = sprite;
             this.legend = legend;
-            chunk = legend.world.GetChunk(pos);
+            chunk = legend.world.GetChunkFromPos(pos);
             this.pos = new Position(posX, posY);
-            chunk = legend.world.GetChunk(pos);
+            chunk = legend.world.GetChunkFromPos(pos);
             legend.world.AddEntity(this, legend.config);
         }
 

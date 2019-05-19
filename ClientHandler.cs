@@ -76,31 +76,41 @@ namespace LegendSharp
 
         public void OnLogin(LoginPacket packet)
         {
-            var request = new HttpRequestMessage() {
-                RequestUri = new Uri("https://discordapp.com/api/users/@me"),
-                Method = HttpMethod.Get,
-            };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packet.accessToken);
-            HttpResponseMessage requestRespose = AsynchronousSocketListener.httpClient.SendAsync(request).Result;;
-            requestRespose.EnsureSuccessStatusCode();
-            string result = requestRespose.Content.ReadAsStringAsync().Result;
-            JObject parsedResult = JObject.Parse(result);
-            if (parsedResult["id"] != null)
+            try
             {
-                String id = parsedResult["id"].ToString();
-                String username = parsedResult["username"].ToString() + "#" + parsedResult["discriminator"].ToString();
-                Console.WriteLine("Successful login from {0} ({1})", id, username);
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri("https://discordapp.com/api/users/@me"),
+                    Method = HttpMethod.Get,
+                };
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", packet.accessToken);
+                HttpResponseMessage requestRespose = AsynchronousSocketListener.httpClient.SendAsync(request).Result; ;
+                requestRespose.EnsureSuccessStatusCode();
+                string result = requestRespose.Content.ReadAsStringAsync().Result;
+                JObject parsedResult = JObject.Parse(result);
+                if (parsedResult["id"] != null)
+                {
+                    String id = parsedResult["id"].ToString();
+                    String username = parsedResult["username"].ToString() + "#" + parsedResult["discriminator"].ToString();
+                    Console.WriteLine("Successful login from {0} ({1})", id, username);
 
-                loggedIn = true;
-                loggedInUser = id;
-                loggedInUsername = username;
+                    loggedIn = true;
+                    loggedInUser = id;
+                    loggedInUsername = username;
 
-                var response = new LoginResultPacket(1, id);
-                SendPacket(response);
+                    var response = new LoginResultPacket(1, id);
+                    SendPacket(response);
+                }
+                else
+                {
+                    Console.WriteLine("Login Failed.");
+                    var response = new LoginResultPacket(0);
+                    SendPacket(response);
+                }
             }
-            else
+            catch (System.Net.Http.HttpRequestException)
             {
-                Console.WriteLine("Login Failed.");
+                Console.WriteLine("Login Errored.");
                 var response = new LoginResultPacket(0);
                 SendPacket(response);
             }

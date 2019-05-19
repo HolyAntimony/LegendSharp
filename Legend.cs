@@ -43,6 +43,80 @@ namespace LegendSharp
         public void DoTick(object s, HighResolutionTimerElapsedEventArgs e)
         {
             //Console.WriteLine("Tick {0}", e.Delay);
+            /* Loop over entities. Porbably not needed and also unoptimized
+            foreach (Entity entity in world.entities)
+            {
+                
+            }*/
+            foreach (Entity entity in world.movedEntities)
+            {
+                if (entity.movedChunks)
+                {
+                    List<Game> toUncache = new List<Game>();
+                    foreach (Game cacher in entity.cachedBy)
+                    {
+                        if (!world.InCacheRange(cacher.player, new Position(entity.pos.x >> 3, entity.pos.y >> 3), config))
+                        {
+                            toUncache.Add(cacher);
+                        }
+                    }
+                    foreach (Game game in toUncache)
+                    {
+                        world.Uncache(game, entity);
+                    }
+                    //Entity moved chunks, we gotta update the caches.
+                    for (int x = Math.Max(0, entity.chunk.pos.x - config.entityDistanceX); x <= Math.Min((world.width >> 3) - 1, entity.chunk.pos.x + config.entityDistanceX); x++)
+                    {
+                        for (int y = Math.Max(0, entity.chunk.pos.y - config.entityDistanceY); y <= Math.Min((world.height >> 3) - 1, entity.chunk.pos.y + config.entityDistanceY); y++)
+                        {
+                            // Possible optimization TODO: Chunks keep track of players specifically
+                            foreach (Entity chunkEntity in world.GetChunk(new Position(x, y)).entities)
+                            {
+                                if (chunkEntity is Player && !entity.cachedBy.Contains(((Player)chunkEntity).game))
+                                {
+                                    world.Cache(((Player)chunkEntity).game, entity);
+                                }
+                            }
+
+                        }
+                    }
+                }
+                foreach (Game cacher in entity.cachedBy)
+                {
+                    if (!cacher.justCached)
+                    {
+                        cacher.UpdateEntityPos(entity);
+                    }
+                    else
+                    {
+                        cacher.justCached = false;
+                    }
+                }
+                if (entity is Player)
+                {
+                    Player playerEntity = (Player)entity;
+                    Game playerGame = playerEntity.game;
+                    for (int x = Math.Max(0, entity.chunk.pos.x - config.entityDistanceX); x <= Math.Min((world.width >> 3) - 1, entity.chunk.pos.x + config.entityDistanceX); x++)
+                    {
+                        for (int y = Math.Max(0, entity.chunk.pos.y - config.entityDistanceY); y <= Math.Min((world.height >> 3) - 1, entity.chunk.pos.y + config.entityDistanceY); y++)
+                        {
+                            // Possible optimization TODO: Chunks keep track of players specifically
+                            foreach (Entity chunkEntity in world.GetChunk(new Position(x, y)).entities)
+                            {
+                                if (!playerGame.cachedEntities.Contains(chunkEntity))
+                                {
+                                    world.Cache(playerGame, chunkEntity);
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                entity.moved = false;
+                entity.movedChunks = false;
+            }
+            world.movedEntities = new List<Entity>();
         }
 
         public void LoadConfig()

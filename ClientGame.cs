@@ -17,7 +17,6 @@ namespace LegendSharp
             this.legend = legend;
             handler.SendPacket(new ReadyPacket(1));
             handler.SendPacket(new PlayerPositionPacket(this.player.pos.x, this.player.pos.y));
-            legend.world.RenderEntities(player, legend.config);
         }
 
         public void HandlePacket(Packet packet)
