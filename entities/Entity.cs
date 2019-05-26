@@ -33,5 +33,10 @@ namespace LegendSharp
         {
             this.facing = facing;
         }
+
+        public virtual void Interact(short type, Entity entity)
+        {
+            //Do nothing
+        }
     }
 }

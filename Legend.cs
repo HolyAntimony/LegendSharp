@@ -146,6 +146,7 @@ namespace LegendSharp
             int entityDistanceX = configJSON.GetValue("entity_distance_x").ToObject<int>();
             int entityDistanceY = configJSON.GetValue("entity_distance_y").ToObject<int>();
             int tickRate = configJSON.GetValue("tick_rate").ToObject<int>();
+            int interactRange = configJSON.GetValue("interactRange").ToObject<int>();
             float tickFrequency = 1000.0f / tickRate;
             timer.Interval = tickFrequency;
 
@@ -161,9 +162,11 @@ namespace LegendSharp
             {
                 string itemId = itemPair.Key;
                 JToken itemToken = itemPair.Value;
-                BaseItem item = BaseItem.DecodeBaseItem(BsonDocument.Parse(itemToken.ToString()));
+                BaseItem item = BaseItem.DecodeBaseItem(BsonDocument.Parse(itemToken.ToString()), itemId);
                 baseItems[itemId] = item;
             }
+
+            Dictionary<String, Dialogue> dialogue = new Dictionary<String, Dialogue>();
 
 
             config = new Config()
@@ -174,8 +177,10 @@ namespace LegendSharp
                 chatRadius = chatRadius,
                 entityDistanceX = entityDistanceX,
                 entityDistanceY = entityDistanceY,
+                interactRange = interactRange,
                 tickRate = tickRate,
                 baseItems = baseItems,
+                dialogue = dialogue
             };
 
             /*
@@ -216,8 +221,8 @@ namespace LegendSharp
             }
 
             /*
- * Get Tiles
- * */
+            * Get Tiles
+            * */
             JObject tilesJSON = JObject.Parse(File.ReadAllText(tilesLocation));
 
             List<JToken> tilesList = tilesJSON.GetValue("tiles").ToObject<List<JToken>>();
@@ -290,6 +295,23 @@ namespace LegendSharp
                     NPC npc = new NPC(sprite, posX, posY, (FACING)facing, dialogueKey, this);
                 }
             }
+
+            /*
+             * Load Dialogue
+             * */
+
+            JObject dialogueJson = JObject.Parse(File.ReadAllText(dialogueLocation));
+
+            foreach (var dialoguePair in dialogueJson)
+            {
+                string dialogueKey = dialoguePair.Key;
+                JToken dialogueToken = dialoguePair.Value;
+                Dialogue singleDialogue = Dialogue.DecodeDialogue(BsonDocument.Parse(dialogueToken.ToString()), config);
+                dialogue[dialogueKey] = singleDialogue;
+            }
+
+
+
         }
 
 

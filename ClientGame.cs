@@ -52,6 +52,22 @@ namespace LegendSharp
                 var msg = new ChatMessage(this.username, messagePacket.message, this.userId);
                 legend.world.SendToNearby(msg, player.pos, legend.config);
             }
+            else if (packet is EntityInteractPacket)
+            {
+                EntityInteractPacket interactPacket = (EntityInteractPacket)packet;
+                TryInteract(interactPacket.interactType, interactPacket.guid);
+            }
+        }
+
+        public override void OpenDialogue(string dialogueKey)
+        {
+            if (legend.config.dialogue.ContainsKey(dialogueKey))
+            {
+                Dialogue dialogue = legend.config.dialogue[dialogueKey];
+                DialoguePacket dialoguePacket = new DialoguePacket(dialogue, this);
+                handler.SendPacket(dialoguePacket);
+                dialogueOpen = dialogue;
+            }
         }
 
         public override void UpdateEntityPos(Entity entity)

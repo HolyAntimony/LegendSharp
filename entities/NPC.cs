@@ -11,5 +11,15 @@ namespace LegendSharp
         {
             this.dialogueKey = dialogueKey;
         }
+
+        public override void Interact(short type, Entity entity)
+        {
+            if (type == 0 && entity is Player)
+            {
+                Player player = (Player)entity;
+                player.game.OpenDialogue(dialogueKey);
+            }
+        }
+
     }
 }

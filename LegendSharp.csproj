@@ -12,7 +12,12 @@
     <CodeFiles Include="packets\types\*.cs" />
     <CodeFiles Include="packets\client\*.cs" />
     <CodeFiles Include="packets\server\*.cs" />
+    <CodeFiles Remove="packets\client\EntityInteractPacket.cs" />
+    <CodeFiles Remove="packets\server\DialoguePacket.cs" />
     <CodeFiles Remove="packets\types\DataBumpWorld.cs" />
+    <CodeFiles Remove="packets\types\DataItem.cs" />
+    <CodeFiles Remove="packets\types\DataOptions.cs" />
+    <CodeFiles Remove="packets\types\DataSubstitutions.cs" />
 	  <CodeFiles Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>

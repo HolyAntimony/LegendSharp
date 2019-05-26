@@ -14,7 +14,9 @@ namespace LegendSharp
         public int chatRadius;
         public int entityDistanceX;
         public int entityDistanceY;
+        public int interactRange;
         public int tickRate;
         public Dictionary<String, BaseItem> baseItems;
+        public Dictionary<String, Dialogue> dialogue;
     }
 }

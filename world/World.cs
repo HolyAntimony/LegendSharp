@@ -20,6 +20,7 @@ namespace LegendSharp
         public List<Entity> entities = new List<Entity>();
         public List<Player> players = new List<Player>();
         public List<Entity> movedEntities = new List<Entity>();
+        public Dictionary<Guid, Entity> entitiesByUuid = new Dictionary<Guid, Entity>();
 
         public World(int[,] worldMap, int[,] bumpMap, int height, int width, Dictionary<Position, Position> portals)
         {
@@ -168,6 +169,25 @@ namespace LegendSharp
             return chunks[pos];
         }
 
+        public Entity GetEntity(Guid guid)
+        {
+            if (entitiesByUuid.ContainsKey(guid))
+            {
+                return entitiesByUuid[guid];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public int GetSimpleDistance(Position pos1, Position pos2)
+        {
+            int xDistance = Math.Abs(pos1.x - pos2.x);
+            int yDistance = Math.Abs(pos1.y - pos2.y);
+            return xDistance > yDistance ? xDistance : yDistance;
+        }
+
         public bool InCacheRange(Entity entity, Position pos, Config config)
         {
             int xDistance = Math.Abs(entity.chunk.pos.x - pos.x);
@@ -270,6 +290,7 @@ namespace LegendSharp
             targetChunk.entities.Add(entity);
             entities.Add(entity);
             movedEntities.Add(entity);
+            entitiesByUuid.Add(entity.uuid, entity);
             entity.moved = true;
             entity.movedChunks = true;
             //UpdateEntityCaches(entity, config);
@@ -285,6 +306,7 @@ namespace LegendSharp
             Chunk entityChunk = entity.chunk;
             entityChunk.entities.Remove(entity);
             entities.Remove(entity);
+            entitiesByUuid.Remove(entity.uuid);
             if (entity is Player)
             {
                 players.Remove((Player) entity);

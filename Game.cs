@@ -17,6 +17,8 @@ namespace LegendSharp
 
         public Player player;
 
+        public Dialogue dialogueOpen = null;
+
         public HashSet<Entity> cachedEntities;
 
         public bool justCached = false;
@@ -49,12 +51,22 @@ namespace LegendSharp
                 inventory.AddItem(item);
             }
 
+            Dictionary<string, Flag> flags = new Dictionary<string, Flag>();
+
+            foreach (var flagPair in userData["flags"].AsBsonDocument)
+            {
+                string flagKey = flagPair.Name;
+                Flag flagValue = Flag.DecodeFlag(flagPair.Value);
+                flags[flagKey] = flagValue;
+            }
+
             player = new Player(
                 userData.GetValue("sprite").ToString(),
                 userData.GetValue("pos_x").ToInt32(),
                 userData.GetValue("pos_y").ToInt32(),
                 userData.GetValue("inventory_size").ToInt32(),
                 inventory,
+                flags,
                 legend,
                 this
             );
@@ -84,9 +96,66 @@ namespace LegendSharp
             userData.Set("sprite", this.player.sprite);
             userData.Set("inventory_size", this.player.inventorySize);
 
+            BsonArray bsonInventory = new BsonArray();
+            foreach (Item item in this.player.inventory.items)
+            {
+                BsonDocument itemDocument = new BsonDocument();
+                itemDocument.Set("base", item.baseItem.itemId);
+                if (item.HasDescription())
+                {
+                    itemDocument.Set("description", item.GetDescription());
+                }
+                if (item.HasItemType())
+                {
+                    itemDocument.Set("item_type", item.GetItemType());
+                }
+                if (item.HasName())
+                {
+                    itemDocument.Set("name", item.GetName());
+                }
+                if (item.HasSprite())
+                {
+                    itemDocument.Set("sprite", item.GetSprite());
+                }
+                if (item is Weapon)
+                {
+                    Weapon weapon = (Weapon)item;
+                    if (weapon.HasDamage())
+                    {
+                        itemDocument.Set("damage", weapon.GetDamage());
+                    }
+                    if (weapon.HasDamageType())
+                    {
+                        itemDocument.Set("damage_type", weapon.GetDamageType());
+                    }
+                    if (weapon.HasWeaponClass())
+                    {
+                        itemDocument.Set("weapon_class", weapon.GetWeaponClass());
+                    }
+                }
+                bsonInventory.Add(itemDocument);
+            }
+            
+
+            userData.Set("inventory", bsonInventory);
+
             userUpdate.Set("$set", userData);
 
             legend.userCollection.UpdateOne(userFilter, userUpdate);
+        }
+
+        public void TryInteract(short interactType, Guid guid)
+        {
+            Entity entity = legend.world.GetEntity(guid);
+            if (entity != null && legend.world.GetSimpleDistance(player.pos, entity.pos) <= legend.config.interactRange)
+            {
+                entity.Interact(interactType, player);
+            }
+        }
+
+        public virtual void OpenDialogue(string dialogueKey)
+        {
+
         }
 
         public virtual void UpdateEntityPos(Entity entity)
@@ -108,5 +177,6 @@ namespace LegendSharp
         {
 
         }
+
     }
 }

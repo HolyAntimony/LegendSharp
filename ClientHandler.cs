@@ -23,7 +23,8 @@ namespace LegendSharp
         readonly Type[] GAME_PACKETS = new Type[] {
             typeof(RequestWorldPacket),
             typeof(MoveAndFacePacket),
-            typeof(SendMessagePacket)
+            typeof(SendMessagePacket),
+            typeof(EntityInteractPacket)
         };
 
         public ClientHandler(Socket handler, Legend legend)
