@@ -278,3 +278,5 @@ bin
 obj
 packages
 launchSettings.json
+items
+items/*
