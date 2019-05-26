@@ -1,10 +1,11 @@
-﻿using System;
+﻿using LegendDialogue;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LegendSharp
 {
-    public class SetFlagAction : Action
+    public class SetFlagAction : PlayerAction
     {
         string flagKey;
         Flag flagValue;

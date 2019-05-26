@@ -1,4 +1,5 @@
 ﻿using LegendSharp;
+using LegendItems;
 using MiscUtil.Conversion;
 
 namespace Packets

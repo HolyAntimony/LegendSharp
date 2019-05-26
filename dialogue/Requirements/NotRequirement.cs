@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LegendSharp
+namespace LegendDialogue
 {
     public class NotRequirement : Requirement
     {

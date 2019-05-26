@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using LegendDialogue;
+using MongoDB.Bson;
 using Packets;
 using System;
 using System.Collections.Generic;

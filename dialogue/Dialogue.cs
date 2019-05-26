@@ -1,9 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using LegendSharp;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LegendSharp
+namespace LegendDialogue
 {
     public class Dialogue
     {
@@ -11,10 +12,10 @@ namespace LegendSharp
         public string author;
         public string sprite;
         public Option[] options;
-        public Action[] actions;
+        public PlayerAction[] actions;
         public Substitution[] substitutions;
 
-        public Dialogue(string text, string author, string sprite, Option[] options, Action[] actions = null, Substitution[] substitutions = null)
+        public Dialogue(string text, string author, string sprite, Option[] options, PlayerAction[] actions = null, Substitution[] substitutions = null)
         {
             this.text = text;
             this.author = author;
@@ -75,14 +76,14 @@ namespace LegendSharp
                 }
             }
 
-            List<Action> actions = new List<Action>();
+            List<PlayerAction> actions = new List<PlayerAction>();
             if (dialogueDocument.Contains("actions"))
             {
                 var bsonActions = dialogueDocument.GetElement("actions").Value.AsBsonArray;
                 foreach (var bsonAction in bsonActions)
                 {
                     var actionDocument = bsonAction.AsBsonDocument;
-                    actions.Add(Action.DecodeAction(actionDocument, config));
+                    actions.Add(PlayerAction.DecodeAction(actionDocument, config.baseItems));
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using LegendSharp;
+﻿using LegendDialogue;
+using LegendSharp;
 using MiscUtil.Conversion;
 using System.Collections.Generic;
 

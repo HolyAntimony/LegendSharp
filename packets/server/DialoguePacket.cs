@@ -1,4 +1,5 @@
-﻿using LegendSharp;
+﻿using LegendDialogue;
+using LegendSharp;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +7,8 @@ namespace Packets
 {
     public class DialoguePacket : Packet
     {
-        public override short id { get { return 8; } }
-        public override string name { get { return "Entity"; } }
+        public override short id { get { return 11; } }
+        public override string name { get { return "Dialogue"; } }
 
         public static DataType[] schema = {
             new DataString(),

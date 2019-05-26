@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using LegendDialogue;
+using LegendItems;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Net;

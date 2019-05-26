@@ -1,15 +1,17 @@
-﻿using MongoDB.Bson;
+﻿using LegendDialogue;
+using LegendItems;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LegendSharp
 {
-    public abstract class Action
+    public abstract class PlayerAction
     {
         public abstract void Run(Game game);
 
-        public static Action DecodeAction(BsonDocument actionDocument, Config config)
+        public static PlayerAction DecodeAction(BsonDocument actionDocument, Dictionary<String, BaseItem> baseItems)
         {
             string actionType = actionDocument.GetValue("type").AsString;
             if (actionType == "set_flag")
@@ -21,7 +23,7 @@ namespace LegendSharp
             else if (actionType == "give_item")
             {
                 BsonDocument itemDocument = actionDocument.GetValue("item").AsBsonDocument;
-                return new GiveItemAction(Item.DecodeItem(itemDocument, config));
+                return new GiveItemAction(Item.DecodeItem(itemDocument, baseItems));
             }
             else
             {

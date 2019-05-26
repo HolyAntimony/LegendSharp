@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LegendSharp
 {
-    public class NullAction : Action
+    public class NullAction : PlayerAction
     {
 
         public NullAction()

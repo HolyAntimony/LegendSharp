@@ -1,11 +1,13 @@
-﻿using MiscUtil.Conversion;
+﻿using LegendItems;
+using LegendSharp;
+using MiscUtil.Conversion;
 using MongoDB.Bson;
 using Packets;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LegendSharp
+namespace LegendDialogue
 {
     public abstract class Substitution
     {
@@ -25,7 +27,7 @@ namespace LegendSharp
             else if (subType == "item")
             {
                 BsonDocument itemDoc = subDocument.GetValue("item").AsBsonDocument;
-                Item item = Item.DecodeItem(itemDoc, config);
+                Item item = Item.DecodeItem(itemDoc, config.baseItems);
                 return new ItemSubstitution(item);
             }
             else if (subType == "text")

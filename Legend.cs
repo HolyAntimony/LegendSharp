@@ -8,6 +8,8 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using HighResolutionTimer;
+using LegendItems;
+using LegendDialogue;
 
 namespace LegendSharp
 {
@@ -146,7 +148,7 @@ namespace LegendSharp
             int entityDistanceX = configJSON.GetValue("entity_distance_x").ToObject<int>();
             int entityDistanceY = configJSON.GetValue("entity_distance_y").ToObject<int>();
             int tickRate = configJSON.GetValue("tick_rate").ToObject<int>();
-            int interactRange = configJSON.GetValue("interactRange").ToObject<int>();
+            int interactRange = configJSON.GetValue("interact_range").ToObject<int>();
             float tickFrequency = 1000.0f / tickRate;
             timer.Interval = tickFrequency;
 

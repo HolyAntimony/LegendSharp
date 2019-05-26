@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LegendDialogue;
+using LegendItems;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

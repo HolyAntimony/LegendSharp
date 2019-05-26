@@ -1,4 +1,5 @@
-﻿using LegendSharp;
+﻿using LegendDialogue;
+using LegendSharp;
 using MiscUtil.Conversion;
 using System.Collections.Generic;
 
@@ -32,7 +33,12 @@ namespace Packets
             byte[] output = new byte[dataLength+4];
 
             System.Buffer.BlockCopy(converter.GetBytes(dataLength), 0, output, 0, 4);
-            System.Buffer.BlockCopy(subData.ToArray(), 0, output, 4, dataLength);
+            int offset = 4;
+            foreach (byte[] bytes in subData)
+            {
+                System.Buffer.BlockCopy(bytes, 0, output, offset, bytes.Length);
+                offset += bytes.Length;
+            }
 
             return output;
         }

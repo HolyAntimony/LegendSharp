@@ -1,10 +1,11 @@
-﻿using MiscUtil.Conversion;
+﻿using LegendSharp;
+using MiscUtil.Conversion;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LegendSharp
+namespace LegendDialogue
 {
     public class FlagSubstitution : Substitution
     {

@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using LegendDialogue;
+using LegendItems;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -47,7 +49,7 @@ namespace LegendSharp
 
             foreach (BsonValue itemValue in userData["inventory"].AsBsonArray)
             {
-                Item item = Item.DecodeItem(itemValue.AsBsonDocument, config);
+                Item item = Item.DecodeItem(itemValue.AsBsonDocument, config.baseItems);
                 inventory.AddItem(item);
             }
 

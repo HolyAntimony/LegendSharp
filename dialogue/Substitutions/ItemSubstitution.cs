@@ -1,11 +1,13 @@
-﻿using MiscUtil.Conversion;
+﻿using LegendItems;
+using LegendSharp;
+using MiscUtil.Conversion;
 using MongoDB.Bson;
 using Packets;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LegendSharp
+namespace LegendDialogue
 {
     public class ItemSubstitution : Substitution
     {
