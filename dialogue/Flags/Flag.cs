@@ -20,5 +20,7 @@ namespace LegendDialogue
                 return new IntegerFlag(0);
             }
         }
+
+        public abstract BsonValue GetValue();
     }
 }

@@ -58,13 +58,44 @@ namespace LegendSharp
                 EntityInteractPacket interactPacket = (EntityInteractPacket)packet;
                 TryInteract(interactPacket.interactType, interactPacket.guid);
             }
+            else if (packet is GUIOptionPacket)
+            {
+                GUIOptionPacket optionPacket = (GUIOptionPacket)packet;
+                if (dialogueOpen != null && dialogueOpen.HasOption(optionPacket.guid))
+                {
+                    Option option = dialogueOpen.GetOption(optionPacket.guid);
+                    //TODO: ENFORCE REQUIREMENTS
+                    if (option.IsDisplayed(player.flags))
+                    {
+                        if (option is DialogueOption)
+                        {
+                            DialogueOption dialogueOption = (DialogueOption)option;
+                            OpenDialogue(dialogueOption.dialogueKey);
+                        }
+                        else if (option is EndDialogueOption)
+                        {
+                            handler.SendPacket(new CloseDialoguePacket(Guid.NewGuid()));
+                        }
+                    }
+                    else
+                    {
+                        //SMH Dirty cheater.
+                        handler.SendPacket(new CloseDialoguePacket(Guid.NewGuid()));
+                    }
+                }
+            }
         }
 
         public override void OpenDialogue(string dialogueKey)
         {
+            //TODO: Actions
             if (legend.config.dialogue.ContainsKey(dialogueKey))
             {
                 Dialogue dialogue = legend.config.dialogue[dialogueKey];
+                foreach (PlayerAction action in dialogue.actions)
+                {
+                    action.Run(this);
+                }
                 DialoguePacket dialoguePacket = new DialoguePacket(dialogue, this);
                 handler.SendPacket(dialoguePacket);
                 dialogueOpen = dialogue;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MongoDB.Bson;
 
 namespace LegendDialogue
 {
@@ -11,6 +12,11 @@ namespace LegendDialogue
         public IntegerFlag(int value)
         {
             this.value = value;
+        }
+
+        public override BsonValue GetValue()
+        {
+            return new BsonInt32(this.value);
         }
 
         public override bool Equals(object obj)

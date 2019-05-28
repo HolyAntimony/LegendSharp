@@ -101,5 +101,29 @@ namespace LegendDialogue
 
             return new Dialogue(text, author, sprite, options.ToArray(), actions.ToArray(), substitutions.ToArray());
         }
+
+        public bool HasOption(Guid uuid)
+        {
+            foreach (Option option in options)
+            {
+                if (option.uuid == uuid)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Option GetOption(Guid uuid)
+        {
+            foreach (Option option in options)
+            {
+                if (option.uuid == uuid)
+                {
+                    return option;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -136,10 +136,17 @@ namespace LegendSharp
                     }
                 }
                 bsonInventory.Add(itemDocument);
-            }
-            
+            }            
 
             userData.Set("inventory", bsonInventory);
+
+            BsonDocument flags = new BsonDocument();
+            foreach (KeyValuePair<string, Flag> entry in player.flags)
+            {
+                flags.Set(entry.Key, entry.Value.GetValue());
+            }
+
+            userData.Set("flags", flags);
 
             userUpdate.Set("$set", userData);
 

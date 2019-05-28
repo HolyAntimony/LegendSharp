@@ -24,7 +24,8 @@ namespace LegendSharp
             typeof(RequestWorldPacket),
             typeof(MoveAndFacePacket),
             typeof(SendMessagePacket),
-            typeof(EntityInteractPacket)
+            typeof(EntityInteractPacket),
+            typeof(GUIOptionPacket)
         };
 
         public ClientHandler(Socket handler, Legend legend)
