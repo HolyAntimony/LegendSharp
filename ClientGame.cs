@@ -1,4 +1,5 @@
 ﻿using LegendDialogue;
+using LegendItems;
 using MongoDB.Bson;
 using Packets;
 using System;
@@ -17,7 +18,9 @@ namespace LegendSharp
             this.handler = handler;
             this.legend = legend;
             handler.SendPacket(new ReadyPacket(1));
+            handler.SendPacket(new PlayerDataPacket(this.player.sprite, this.player.uuid));
             handler.SendPacket(new PlayerPositionPacket(this.player.pos.x, this.player.pos.y));
+            handler.SendPacket(new InventoryPacket(this.player.inventory));
         }
 
         public void HandlePacket(Packet packet)
@@ -122,6 +125,11 @@ namespace LegendSharp
         public override void SendMessage(ChatMessage message, Position pos)
         {
             handler.SendPacket(new ChatPacket(message.author, message.message, message.authorId, message.uuid, pos.x, pos.y));
+        }
+
+        public override void AddToInventory(Guid guid, Item item, int index)
+        {
+            handler.SendPacket(new AddItemPacket(guid, item, index));
         }
     }
 }

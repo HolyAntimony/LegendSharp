@@ -25,6 +25,12 @@ namespace LegendSharp
                 BsonDocument itemDocument = actionDocument.GetValue("item").AsBsonDocument;
                 return new GiveItemAction(Item.DecodeItem(itemDocument, baseItems));
             }
+            else if (actionType == "increment_flag")
+            {
+                string flagKey = actionDocument.GetValue("flag").AsString;
+                NumericalFlag amount = (NumericalFlag) Flag.DecodeFlag(actionDocument.GetValue("value"));
+                return new IncrementFlagAction(flagKey, amount);
+            }
             else
             {
                 return new NullAction();

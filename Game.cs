@@ -46,11 +46,12 @@ namespace LegendSharp
             }
 
             Inventory inventory = new Inventory();
+            inventory.openedBy.Add(this);
 
             foreach (BsonValue itemValue in userData["inventory"].AsBsonArray)
             {
                 Item item = Item.DecodeItem(itemValue.AsBsonDocument, config.baseItems);
-                inventory.AddItem(item);
+                inventory.AddItem(item, false);
             }
 
             Dictionary<string, Flag> flags = new Dictionary<string, Flag>();
@@ -72,6 +73,8 @@ namespace LegendSharp
                 legend,
                 this
             );
+
+            inventory.guid = player.uuid;
 
             foreach (var item in player.inventory.items)
             {
@@ -183,6 +186,16 @@ namespace LegendSharp
         }
 
         public virtual void SendMessage(ChatMessage message, Position pos)
+        {
+
+        }
+
+        public virtual void AddToInventory(Guid guid, Item item, int index)
+        {
+
+        }
+
+        public virtual void RemoveFromInventory(int index, Item item)
         {
 
         }

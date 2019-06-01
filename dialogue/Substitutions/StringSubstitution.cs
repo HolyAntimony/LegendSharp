@@ -26,7 +26,7 @@ namespace LegendDialogue
             byte[] output = new byte[textData.Length + 2];
 
             System.Buffer.BlockCopy(idData, 0, output, 0, 2);
-            System.Buffer.BlockCopy(textData, 0, output, 0, textData.Length);
+            System.Buffer.BlockCopy(textData, 0, output, 2, textData.Length);
 
             return output;
         }

@@ -14,9 +14,13 @@
     <CodeFiles Include="packets\server\*.cs" />
     <CodeFiles Remove="packets\client\EntityInteractPacket.cs" />
     <CodeFiles Remove="packets\client\GUIOptionPacket.cs" />
+    <CodeFiles Remove="packets\server\AddItemPacket.cs" />
     <CodeFiles Remove="packets\server\CloseDialoguePacket.cs" />
     <CodeFiles Remove="packets\server\DialoguePacket.cs" />
+    <CodeFiles Remove="packets\server\InventoryPacket.cs" />
+    <CodeFiles Remove="packets\server\PlayerDataPacket.cs" />
     <CodeFiles Remove="packets\types\DataBumpWorld.cs" />
+    <CodeFiles Remove="packets\types\DataInventory.cs" />
     <CodeFiles Remove="packets\types\DataItem.cs" />
     <CodeFiles Remove="packets\types\DataOptions.cs" />
     <CodeFiles Remove="packets\types\DataSubstitutions.cs" />

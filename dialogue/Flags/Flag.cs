@@ -13,11 +13,16 @@ namespace LegendDialogue
             if (flagValue.IsInt32)
             {
                 int flagNumericalValue = flagValue.AsInt32;
-                return new IntegerFlag(flagNumericalValue);
+                return new NumericalFlag((double) flagNumericalValue);
+            }
+            else if (flagValue.IsDouble)
+            {
+                double flagNumericalValue = flagValue.AsDouble;
+                return new NumericalFlag((double) flagNumericalValue);
             }
             else
             {
-                return new IntegerFlag(0);
+                return new NumericalFlag(0);
             }
         }
 

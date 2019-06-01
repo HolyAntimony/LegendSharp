@@ -28,6 +28,18 @@ namespace LegendDialogue
                 Flag flagValue = Flag.DecodeFlag(requirementDocument.GetValue("value"));
                 return new EqualsRequirement(flagKey, flagValue);
             }
+            else if (requirementType == "less_than")
+            {
+                string flagKey = requirementDocument.GetValue("flag").AsString;
+                NumericalFlag flagValue = (NumericalFlag) Flag.DecodeFlag(requirementDocument.GetValue("value"));
+                return new LessThanRequirement(flagKey, flagValue);
+            }
+            else if (requirementType == "more_than")
+            {
+                string flagKey = requirementDocument.GetValue("flag").AsString;
+                NumericalFlag flagValue = (NumericalFlag)Flag.DecodeFlag(requirementDocument.GetValue("value"));
+                return new MoreThanRequirement(flagKey, flagValue);
+            }
             else if (requirementType == "not")
             {
                 BsonDocument subRequirementDocument = requirementDocument.GetValue("requirement").AsBsonDocument;

@@ -16,7 +16,7 @@ namespace LegendDialogue
 
         public override bool Validate(Dictionary<String, Flag> flags)
         {
-            if (flags.ContainsKey(flagName) && flags[flagName] == value)
+            if (flags.ContainsKey(flagName) && flags[flagName].Equals(value))
             {
                 return true;
             }

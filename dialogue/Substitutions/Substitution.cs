@@ -24,6 +24,11 @@ namespace LegendDialogue
                 string flagKey = subDocument.GetValue("flag").AsString;
                 return new FlagSubstitution(flagKey);
             }
+            else if (subType == "char")
+            {
+                string flagKey = subDocument.GetValue("flag").AsString;
+                return new FlagCharSubstitution(flagKey);
+            }
             else if (subType == "item")
             {
                 BsonDocument itemDoc = subDocument.GetValue("item").AsBsonDocument;
