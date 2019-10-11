@@ -15,6 +15,12 @@ namespace LegendSharp
             String itemSprite = itemDocument["sprite"].AsString;
             String itemName = itemDocument["name"].AsString;
             String itemDescription = itemDocument["description"].AsString;
+            int maxStack = 1;
+
+            if (itemDocument.Contains("max_stack"))
+            {
+                maxStack = itemDocument["max_stack"].AsInt32;
+            }
 
             if (itemType == "weapon")
             {
@@ -25,7 +31,7 @@ namespace LegendSharp
             }
             else
             {
-                return new BaseItem(itemSprite, itemName, itemDescription, itemId, itemType);
+                return new BaseItem(itemSprite, itemName, itemDescription, itemId, itemType, maxStack);
             }
         }
 
@@ -46,6 +52,8 @@ namespace LegendSharp
             String itemSprite = null;
             String itemName = null;
             String itemDescription = null;
+            int? maxStack = null;
+            int quantity = 1;
 
             if (itemDocument.Contains("item_type"))
             {
@@ -62,6 +70,14 @@ namespace LegendSharp
             if (itemDocument.Contains("description"))
             {
                 itemDescription = itemDocument["description"].AsString;
+            }
+            if (itemDocument.Contains("max_stack"))
+            {
+                maxStack = itemDocument["max_stack"].AsInt32;
+            }
+            if (itemDocument.Contains("quantity"))
+            {
+                quantity = itemDocument["quantity"].AsInt32;
             }
 
             if (itemType == "weapon" || (itemType == null && baseItem.type == "weapon"))
@@ -85,7 +101,7 @@ namespace LegendSharp
             }
             else
             {
-                return new Item(baseItem, itemSprite, itemName, itemDescription, itemType);
+                return new Item(baseItem, itemSprite, itemName, itemDescription, itemType, maxStack, quantity);
             }
 
         }

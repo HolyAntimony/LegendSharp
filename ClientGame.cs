@@ -132,5 +132,10 @@ namespace LegendSharp
             Console.WriteLine("ClientGame called");
             handler.SendPacket(new AddItemPacket(guid, item, index));
         }
+
+        public override void ChangeInInventory(Guid guid, Item item, int index)
+        {
+            handler.SendPacket(new ModifyItemPacket(guid, item, index));
+        }
     }
 }

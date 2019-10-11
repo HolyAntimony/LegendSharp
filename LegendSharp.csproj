@@ -18,6 +18,7 @@
     <CodeFiles Remove="packets\server\CloseDialoguePacket.cs" />
     <CodeFiles Remove="packets\server\DialoguePacket.cs" />
     <CodeFiles Remove="packets\server\InventoryPacket.cs" />
+    <CodeFiles Remove="packets\server\ModifyItemPacket.cs" />
     <CodeFiles Remove="packets\server\PlayerDataPacket.cs" />
     <CodeFiles Remove="packets\types\DataBumpWorld.cs" />
     <CodeFiles Remove="packets\types\DataInventory.cs" />

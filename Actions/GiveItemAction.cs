@@ -18,7 +18,7 @@ namespace LegendSharp
         {
             if (game.active)
             {
-                game.player.inventory.AddItem(item);
+                game.player.inventory.AddItem(new Item(item));
             }
         }
     }

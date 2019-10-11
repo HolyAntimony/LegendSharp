@@ -47,6 +47,7 @@ namespace LegendSharp
 
             Inventory inventory = new Inventory();
             inventory.ItemAddedToInventory += new Inventory.ItemAddedToInventoryHandler(ItemAddedToInventory);
+            inventory.ItemModified += new Inventory.ItemModifiedHandler(ItemModified);
 
             foreach (BsonValue itemValue in userData["inventory"].AsBsonArray)
             {
@@ -78,7 +79,7 @@ namespace LegendSharp
 
             foreach (var item in player.inventory.items)
             {
-                Console.WriteLine("{0}: [{1} / {2}] \"{3}\" ", item.GetName(), item.GetSprite(), item.GetItemType(), item.GetDescription());
+                Console.WriteLine("{0}: [{1} / {2}] \"{3}\" x{4} ", item.GetName(), item.GetSprite(), item.GetItemType(), item.GetDescription(), item.GetQuantity());
             }
 
         }
@@ -106,6 +107,8 @@ namespace LegendSharp
             {
                 BsonDocument itemDocument = new BsonDocument();
                 itemDocument.Set("base", item.baseItem.itemId);
+                Console.WriteLine("Saving {0} x{1}", item.GetName(), item.GetQuantity());
+                itemDocument.Set("quantity", item.GetQuantity());
                 if (item.HasDescription())
                 {
                     itemDocument.Set("description", item.GetDescription());
@@ -121,6 +124,10 @@ namespace LegendSharp
                 if (item.HasSprite())
                 {
                     itemDocument.Set("sprite", item.GetSprite());
+                }
+                if (item.HasMaxStack())
+                {
+                    itemDocument.Set("max_stack", item.GetMaxStack());
                 }
                 if (item is Weapon)
                 {
@@ -159,6 +166,11 @@ namespace LegendSharp
         public void ItemAddedToInventory(Inventory inventory, Item item, int index)
         {
             AddToInventory(inventory.guid, item, index);
+        }
+
+        public void ItemModified(Inventory inventory, Item item, int index)
+        {
+            ChangeInInventory(inventory.guid, item, index);
         }
 
         public void TryInteract(short interactType, Guid guid)
@@ -205,5 +217,9 @@ namespace LegendSharp
 
         }
 
+        public virtual void ChangeInInventory(Guid guid, Item item, int index)
+        {
+
+        }
     }
 }
