@@ -164,7 +164,7 @@ namespace LegendSharp
             {
                 string itemId = itemPair.Key;
                 JToken itemToken = itemPair.Value;
-                BaseItem item = BaseItem.DecodeBaseItem(BsonDocument.Parse(itemToken.ToString()), itemId);
+                BaseItem item = LegendDB.DecodeBaseItem(BsonDocument.Parse(itemToken.ToString()), itemId);
                 baseItems[itemId] = item;
             }
 
@@ -308,7 +308,7 @@ namespace LegendSharp
             {
                 string dialogueKey = dialoguePair.Key;
                 JToken dialogueToken = dialoguePair.Value;
-                Dialogue singleDialogue = Dialogue.DecodeDialogue(BsonDocument.Parse(dialogueToken.ToString()), config);
+                Dialogue singleDialogue = LegendDB.DecodeDialogue(BsonDocument.Parse(dialogueToken.ToString()), config);
                 dialogue[dialogueKey] = singleDialogue;
             }
 

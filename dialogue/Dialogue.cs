@@ -59,49 +59,6 @@ namespace LegendDialogue
             return String.Format(text, textSubstitutions.ToArray());
         }
 
-        public static Dialogue DecodeDialogue(BsonDocument dialogueDocument, Config config)
-        {
-            string text = dialogueDocument.GetValue("text").AsString;
-            string author = dialogueDocument.GetValue("author").AsString;
-            string sprite = dialogueDocument.GetValue("sprite").AsString;
-
-            List<Option> options = new List<Option>();
-            if (dialogueDocument.Contains("options"))
-            {
-                var bsonOptions = dialogueDocument.GetElement("options").Value.AsBsonArray;
-                foreach (var bsonOption in bsonOptions)
-                {
-                    var optionDocument = bsonOption.AsBsonDocument;
-                    options.Add(Option.DecodeOption(optionDocument.AsBsonDocument));
-                }
-            }
-
-            List<PlayerAction> actions = new List<PlayerAction>();
-            if (dialogueDocument.Contains("actions"))
-            {
-                var bsonActions = dialogueDocument.GetElement("actions").Value.AsBsonArray;
-                foreach (var bsonAction in bsonActions)
-                {
-                    var actionDocument = bsonAction.AsBsonDocument;
-                    actions.Add(PlayerAction.DecodeAction(actionDocument, config.baseItems));
-                }
-            }
-
-            List<Substitution> substitutions = new List<Substitution>();
-            
-            if (dialogueDocument.Contains("substitutions"))
-            {
-                var bsonSubs = dialogueDocument.GetElement("substitutions").Value.AsBsonArray;
-                foreach (var subValue in bsonSubs)
-                {
-                    var subDocument = subValue.AsBsonDocument;
-                    substitutions.Add(Substitution.DecodeSubstitution(subDocument, config));
-                }
-            }
-
-            return new Dialogue(text, author, sprite, options.ToArray(), actions.ToArray(), substitutions.ToArray());
-        }
-
         public bool HasOption(Guid uuid)
         {
             foreach (Option option in options)

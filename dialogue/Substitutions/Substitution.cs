@@ -16,36 +16,6 @@ namespace LegendDialogue
         public abstract byte[] Encode(BigEndianBitConverter converter);
         public abstract Substitution Simplify(Game game);
 
-        public static Substitution DecodeSubstitution(BsonDocument subDocument, Config config)
-        {
-            string subType = subDocument.GetValue("type").AsString;
-            if (subType == "flag")
-            {
-                string flagKey = subDocument.GetValue("flag").AsString;
-                return new FlagSubstitution(flagKey);
-            }
-            else if (subType == "char")
-            {
-                string flagKey = subDocument.GetValue("flag").AsString;
-                return new FlagCharSubstitution(flagKey);
-            }
-            else if (subType == "item")
-            {
-                BsonDocument itemDoc = subDocument.GetValue("item").AsBsonDocument;
-                Item item = Item.DecodeItem(itemDoc, config.baseItems);
-                return new ItemSubstitution(item);
-            }
-            else if (subType == "text")
-            {
-                string text = subDocument.GetValue("text").AsString;
-                return new StringSubstitution(text);
-            }
-            else
-            {
-                return new StringSubstitution("");
-            }
-        }
-
         public static Substitution DecodeSubstitution(byte[] data, BigEndianBitConverter converter, int offset = 0)
         {
             short subId = converter.ToInt16(data, offset);

@@ -129,6 +129,7 @@ namespace LegendSharp
 
         public override void AddToInventory(Guid guid, Item item, int index)
         {
+            Console.WriteLine("ClientGame called");
             handler.SendPacket(new AddItemPacket(guid, item, index));
         }
     }

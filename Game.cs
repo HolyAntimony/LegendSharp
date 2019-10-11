@@ -46,11 +46,11 @@ namespace LegendSharp
             }
 
             Inventory inventory = new Inventory();
-            inventory.openedBy.Add(this);
+            inventory.ItemAddedToInventory += new Inventory.ItemAddedToInventoryHandler(ItemAddedToInventory);
 
             foreach (BsonValue itemValue in userData["inventory"].AsBsonArray)
             {
-                Item item = Item.DecodeItem(itemValue.AsBsonDocument, config.baseItems);
+                Item item = LegendDB.DecodeItem(itemValue.AsBsonDocument, config.baseItems);
                 inventory.AddItem(item, false);
             }
 
@@ -59,7 +59,7 @@ namespace LegendSharp
             foreach (var flagPair in userData["flags"].AsBsonDocument)
             {
                 string flagKey = flagPair.Name;
-                Flag flagValue = Flag.DecodeFlag(flagPair.Value);
+                Flag flagValue = LegendDB.DecodeFlag(flagPair.Value);
                 flags[flagKey] = flagValue;
             }
 
@@ -156,6 +156,11 @@ namespace LegendSharp
             legend.userCollection.UpdateOne(userFilter, userUpdate);
         }
 
+        public void ItemAddedToInventory(Inventory inventory, Item item, int index)
+        {
+            AddToInventory(inventory.guid, item, index);
+        }
+
         public void TryInteract(short interactType, Guid guid)
         {
             Entity entity = legend.world.GetEntity(guid);
@@ -192,7 +197,7 @@ namespace LegendSharp
 
         public virtual void AddToInventory(Guid guid, Item item, int index)
         {
-
+            Console.WriteLine("Game called");
         }
 
         public virtual void RemoveFromInventory(int index, Item item)

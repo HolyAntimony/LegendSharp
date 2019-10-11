@@ -10,31 +10,5 @@ namespace LegendSharp
     public abstract class PlayerAction
     {
         public abstract void Run(Game game);
-
-        public static PlayerAction DecodeAction(BsonDocument actionDocument, Dictionary<String, BaseItem> baseItems)
-        {
-            string actionType = actionDocument.GetValue("type").AsString;
-            if (actionType == "set_flag")
-            {
-                string flagKey = actionDocument.GetValue("flag").AsString;
-                Flag flagValue = Flag.DecodeFlag(actionDocument.GetValue("value"));
-                return new SetFlagAction(flagKey, flagValue);
-            }
-            else if (actionType == "give_item")
-            {
-                BsonDocument itemDocument = actionDocument.GetValue("item").AsBsonDocument;
-                return new GiveItemAction(Item.DecodeItem(itemDocument, baseItems));
-            }
-            else if (actionType == "increment_flag")
-            {
-                string flagKey = actionDocument.GetValue("flag").AsString;
-                NumericalFlag amount = (NumericalFlag) Flag.DecodeFlag(actionDocument.GetValue("value"));
-                return new IncrementFlagAction(flagKey, amount);
-            }
-            else
-            {
-                return new NullAction();
-            }
-        }
     }
 }

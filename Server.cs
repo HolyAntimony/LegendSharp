@@ -48,7 +48,7 @@ namespace LegendSharp
             // running the listener is "host.contoso.com".  
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());  
             IPAddress ipAddress = ipHostInfo.AddressList[0]; 
-            ipAddress = IPAddress.Parse("10.1.0.152");
+            ipAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 21321);  
     
             // Create a TCP/IP socket.  
